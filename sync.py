@@ -25,23 +25,30 @@ def get_feishu_token():
 
 
 # -----------------------------
-# 2. 获取微信读书笔记 / 阅读记录
+# 2. 获取微信读书数据
 # -----------------------------
-def get_weread_bookshelf():
-    url = "https://i.weread.qq.com/bookshelf/friendBookList"
-    resp = requests.get(url, headers={"Cookie": WEREAD_COOKIE})
-    return resp.json()
+def common_headers():
+    return {
+        "Cookie": WEREAD_COOKIE,
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+        "Referer": "https://weread.qq.com/",
+        "Accept": "application/json, text/plain, */*"
+    }
 
 
 def get_weread_recent_read():
-    url = "https://i.weread.qq.com/user/readlog"
-    resp = requests.get(url, headers={"Cookie": WEREAD_COOKIE})
+    url = "https://i.weread.qq.com/recent_read"
+    resp = requests.get(url, headers=common_headers())
+
+    print("WeRead Status:", resp.status_code)
+    print("WeRead Raw Response:", resp.text[:200])
+
     return resp.json()
 
 
 def get_weread_bookmark(book_id):
     url = f"https://i.weread.qq.com/book/bookmarklist?bookId={book_id}"
-    resp = requests.get(url, headers={"Cookie": WEREAD_COOKIE})
+    resp = requests.get(url, headers=common_headers())
     return resp.json()
 
 
